@@ -52,8 +52,10 @@ def check_alerts_all(): #Из конфига
     com_GP = pd.read_csv('./ds/GP_reviews.csv')
     com_GP['at'] = pd.to_datetime(com_GP['at'])
 
-    gp_com_count = com_GP[['score', 'at']].set_index('at').sort_index().rolling(window='2D').count().reset_index()
-    ap_com_count = com_AS[['rating', 'date']].set_index('date').sort_index().rolling(window='2D').count().reset_index()
+    gp_com_count  = com_GP['at'].dt.date.value_counts().reset_index().sort_values('index').rename(columns={'index': 'at', 'at': 'score'})
+    gp_com_count['at'] = pd.to_datetime(gp_com_count['at'])
+    ap_com_count = com_AS['date'].dt.date.value_counts().reset_index().sort_values('index').rename(columns={'index': 'date', 'date': 'rating'})
+    ap_com_count['date'] = pd.to_datetime(ap_com_count['date'])
     
     return dict(gp=check_alert(gp['date'], gp['score'], lag=lag_gp, std_scale=std_gp),
                 ap=check_alert(ap['date'], ap['score'], lag=lag_as, std_scale=std_as),
@@ -145,7 +147,8 @@ def table_manager(name):
 
         com_GP = pd.read_csv('./ds/GP_reviews.csv')
         com_GP['at'] = pd.to_datetime(com_GP['at'])
-        gp_com_count = com_GP[['score', 'at']].set_index('at').sort_index().rolling(window='2D').count().reset_index()
+        gp_com_count  = com_GP['at'].dt.date.value_counts().reset_index().sort_values('index').rename(columns={'index': 'at', 'at': 'score'})
+        gp_com_count['at'] = pd.to_datetime(gp_com_count['at'])
 
         plot_dif(x, y, title, lag=lag_gp, sd=std_gp , comments=False)
         plot_dif(gp_com_count['at'], gp_com_count['score'], title, lag=lag_gp_comment, sd=std_gp_comment , comments=True)
@@ -164,7 +167,8 @@ def table_manager(name):
 
         com_AS = pd.read_csv('./ds/AS_reviews.csv')
         com_AS['date'] = pd.to_datetime(com_AS['date'])
-        ap_com_count = com_AS[['rating', 'date']].set_index('date').sort_index().rolling(window='2D').count().reset_index()
+        ap_com_count = com_AS['date'].dt.date.value_counts().reset_index().sort_values('index').rename(columns={'index': 'date', 'date': 'rating'})
+        ap_com_count['date'] = pd.to_datetime(ap_com_count['date'])
         plot_dif(x, y, title, lag=lag_as, sd=std_as , comments=False)
         plot_dif(ap_com_count['date'], ap_com_count['rating'], title, lag=lag_as_comment, sd=std_as_comment , comments=True)
 
