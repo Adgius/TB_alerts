@@ -101,12 +101,12 @@ def plot_dif(x, y, title, lag=10, sd=2, comments=False):
         if not comments:
             if value < y_lower[-1]:
                 X_alert.append(date)
-                y_alert.append(y_lower[-1])
+                y_alert.append(value)
 
         else:
             if value > y_upper[-1]:
                 X_alert.append(date)
-                y_alert.append(y_upper[-1])
+                y_alert.append(value)
             
     ax.plot(x, y_pred, c='green', label='predict')        
     ax.scatter(X_alert, y_alert, c='red', label='alert')
