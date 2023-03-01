@@ -99,12 +99,12 @@ def plot_dif(x, y, title, lag=10, sd=2, comments=False):
         y_pred.append(mean)
         y_upper.append(mean + std), y_lower.append(mean - std if mean - std > 0 else 0)
         if not comments:
-            if value < y_lower[-1]:
+            if (value < y_lower[-1]) and (end not in [i.date() for i in X_alert]):
                 X_alert.append(date)
                 y_alert.append(value)
 
         else:
-            if value > y_upper[-1]:
+            if (value > y_upper[-1]) and (end not in [i.date() for i in X_alert]):
                 X_alert.append(date)
                 y_alert.append(value)
             
